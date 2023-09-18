@@ -1,13 +1,13 @@
 package sorting;
 
-import sorting.analyser.DataAnalyser;
-import sorting.analyser.DataAnalyserFactory;
+import sorting.menu.Menu;
+import sorting.menu.Mode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
     public static void main(final String[] args) {
-        DataAnalyser<?> dataAnalyser = DataAnalyserFactory.createDataAnalyser(args);
 
         final var input = new ArrayList<String>();
         Scanner scanner = new Scanner(System.in);
@@ -15,6 +15,7 @@ public class Main {
             input.add(scanner.nextLine());
         }
 
-        dataAnalyser.printStats(input);
+        Mode mode = Menu.parseArgs(args);
+        mode.printStats(input);
     }
 }

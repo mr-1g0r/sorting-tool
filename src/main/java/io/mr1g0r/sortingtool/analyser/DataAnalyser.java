@@ -1,10 +1,12 @@
 package sorting.analyser;
 
+import sorting.menu.Mode;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class DataAnalyser<T> {
+public abstract class DataAnalyser<T> implements Mode {
     protected final Map<T, Integer> statsMap = new HashMap<>();
 
     public void printStats(List<String> source) {
