@@ -1,14 +1,8 @@
 package sorting.sorter;
 
-public class DataSorter {
+import java.util.List;
 
-    private final SortingType sortingType;
-
-    protected DataSorter(final SortingType sortingType) {
-        this.sortingType = sortingType;
-    }
-
-    public SortingType getSortingType() {
-        return sortingType;
-    }
+@FunctionalInterface
+public interface DataSorter {
+    void printStats(List<String> source);
 }

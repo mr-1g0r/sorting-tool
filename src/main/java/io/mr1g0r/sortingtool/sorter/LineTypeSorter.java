@@ -1,41 +1,38 @@
 package sorting.sorter;
 
-import sorting.menu.Mode;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class LineTypeSorter extends DataSorter implements Mode {
+public class LineTypeSorter extends GenericDataSorter<String> {
+
+    public static final String NATURAL_ORDER_STATS_TEMPLATE = "Total lines: %d.%nSorted data:%n%s";
+    public static final String BYCOUNT_ORDER_SUMMARY_TEMPLATE = "Total lines: %d.%n";
+    public static final String BYCOUNT_ORDER_ENTRY_TEMPLATE = "%s: %d time(s), %d%%%n";
 
     public LineTypeSorter(final SortingType sortingType) {
-        super(sortingType);
+        super(sortingType, NATURAL_ORDER_STATS_TEMPLATE,
+                BYCOUNT_ORDER_SUMMARY_TEMPLATE, BYCOUNT_ORDER_ENTRY_TEMPLATE);
     }
 
     @Override
-    public void printStats(final List<String> source) {
-        if (getSortingType() == SortingType.NATURAL) {
-            String sortedData = source.stream()
-                    .sorted()
-                    .map(Object::toString)
-                    .collect(Collectors.joining("\n"));
-
-            System.out.printf("Total lines: %d.%n" +
-                    "Sorted data:%n%s", source.size(), sortedData);
-        } else {
-            System.out.printf("Total lines: %d.%n", source.size());
-
-            source.stream()
-                    .collect(Collectors.groupingBy(
-                            i -> i,
-                            LinkedHashMap::new,
-                            Collectors.counting()))
-                    .entrySet()
-                    .stream().sorted(Comparator.comparingLong(Map.Entry::getValue))
-                    .forEach(e -> {
-                        var percentage = 100 * e.getValue() / source.size();
-                        System.out.printf("%s: %d time(s), %d%%%n", e.getKey(), e.getValue(), percentage);
-                    });
-        }
+    protected List<String> getRawData(final List<String> userInput) {
+        return userInput;
     }
 
+    @NotNull
+    @Override
+    protected Collector<CharSequence, ?, String> getNaturalOrderCollector() {
+        return Collectors.joining("\n");
+    }
+
+    @NotNull
+    @Override
+    protected Comparator<Map.Entry<String, Long>> getPreOrderingComparator() {
+        return Map.Entry.comparingByKey();
+    }
 }

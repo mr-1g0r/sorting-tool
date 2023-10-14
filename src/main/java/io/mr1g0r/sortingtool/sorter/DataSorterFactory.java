@@ -1,7 +1,6 @@
 package sorting.sorter;
 
 import org.jetbrains.annotations.NotNull;
-import sorting.menu.Mode;
 
 import java.util.Optional;
 
@@ -16,7 +15,7 @@ public class DataSorterFactory {
 
     public static final String SORTING_TYPE_PARAM = "-sortingType";
 
-    public static Mode createDataSorter(final String[] args) {
+    public static DataSorter createDataSorter(final String[] args) {
         var config = getConfiguration(args);
         return switch (config.dataType()) {
             case LONG -> new LongTypeSorter(config.sortingType());

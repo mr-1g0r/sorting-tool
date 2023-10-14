@@ -1,7 +1,7 @@
 package sorting;
 
-import sorting.menu.Menu;
-import sorting.menu.Mode;
+import sorting.sorter.DataSorter;
+import sorting.sorter.DataSorterFactory;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -15,7 +15,13 @@ public class Main {
             input.add(scanner.nextLine());
         }
 
-        Mode mode = Menu.parseArgs(args);
-        mode.printStats(input);
+        DataSorter dataSorter = Menu.parseArgs(args);
+        dataSorter.printStats(input);
+    }
+
+    static class Menu {
+        public static DataSorter parseArgs(final String[] args) {
+            return DataSorterFactory.createDataSorter(args);
+        }
     }
 }
