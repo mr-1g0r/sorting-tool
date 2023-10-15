@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public abstract class GenericDataSorter<T> implements DataSorter {
+public abstract class GenericDataSorter<T extends Comparable<T>> implements DataSorter {
 
     private final SortingType sortingType;
     private final String naturalOrderStatsTemplate;
@@ -46,7 +46,7 @@ public abstract class GenericDataSorter<T> implements DataSorter {
                             Collectors.counting()))
                     .entrySet()
                     .stream()
-                    .sorted(getPreOrderingComparator())
+                    .sorted(Map.Entry.comparingByKey())
                     .sorted(Comparator.comparingLong(Map.Entry::getValue))
                     .forEach(e -> {
                         var percentage = 100 * e.getValue() / unorderedData.size();
@@ -59,9 +59,6 @@ public abstract class GenericDataSorter<T> implements DataSorter {
 
     @NotNull
     protected abstract Collector<CharSequence, ?, String> getNaturalOrderCollector();
-    
-    @NotNull
-    protected abstract Comparator<Map.Entry<T, Long>> getPreOrderingComparator();
 
     protected SortingType getSortingType() {
         return sortingType;

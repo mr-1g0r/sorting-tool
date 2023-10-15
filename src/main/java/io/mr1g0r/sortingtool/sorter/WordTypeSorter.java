@@ -34,9 +34,4 @@ public class WordTypeSorter extends GenericDataSorter<String> {
         return Collectors.joining(" ");
     }
 
-    @NotNull
-    @Override
-    protected Comparator<Map.Entry<String, Long>> getPreOrderingComparator() {
-        return Map.Entry.comparingByKey();
-    }
 }

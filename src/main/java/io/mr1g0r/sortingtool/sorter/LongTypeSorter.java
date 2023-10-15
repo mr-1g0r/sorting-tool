@@ -6,11 +6,13 @@ import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class LongTypeSorter extends GenericDataSorter<Integer> {
+public class LongTypeSorter extends GenericDataSorter<Long> {
 
     public static final String NATURAL_ORDER_STATS_TEMPLATE = "Total numbers: %d.%nSorted data: %s";
     public static final String BYCOUNT_ORDER_SUMMARY_TEMPLATE = "Total numbers: %d.%n";
     public static final String BYCOUNT_ORDER_ENTRY_TEMPLATE = "%d: %d time(s), %d%%%n";
+
+    public static final String VALUE_PARSING_ERROR_TEMPLATE = "\"%s\" is not a long. It will be skipped.%n";
 
     public LongTypeSorter(final SortingType sortingType) {
         super(sortingType, NATURAL_ORDER_STATS_TEMPLATE,
@@ -18,11 +20,20 @@ public class LongTypeSorter extends GenericDataSorter<Integer> {
     }
 
     @Override
-    protected List<Integer> getRawData(final List<String> userInput) {
-        final var rawData = new ArrayList<Integer>();
+    protected List<Long> getRawData(final List<String> userInput) {
+        final var rawData = new ArrayList<Long>();
         for (String line : userInput) {
             rawData.addAll(Arrays.stream(line.split("\\s+"))
-                    .mapToInt(Integer::parseInt)
+                    .map(s -> {
+                        try {
+                            return OptionalLong.of(Long.parseLong(s));
+                        } catch (NumberFormatException e) {
+                            System.out.printf(VALUE_PARSING_ERROR_TEMPLATE, s);
+                        }
+                        return OptionalLong.empty();
+                    })
+                    .filter(OptionalLong::isPresent)
+                    .mapToLong(OptionalLong::getAsLong)
                     .sorted()
                     .boxed().toList());
         }
@@ -35,9 +46,4 @@ public class LongTypeSorter extends GenericDataSorter<Integer> {
         return Collectors.joining(" ");
     }
 
-    @NotNull
-    @Override
-    protected Comparator<Map.Entry<Integer, Long>> getPreOrderingComparator() {
-        return Map.Entry.comparingByKey();
-    }
 }

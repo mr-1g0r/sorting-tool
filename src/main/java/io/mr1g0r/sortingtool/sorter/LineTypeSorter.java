@@ -2,9 +2,7 @@ package sorting.sorter;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -30,9 +28,4 @@ public class LineTypeSorter extends GenericDataSorter<String> {
         return Collectors.joining("\n");
     }
 
-    @NotNull
-    @Override
-    protected Comparator<Map.Entry<String, Long>> getPreOrderingComparator() {
-        return Map.Entry.comparingByKey();
-    }
 }
