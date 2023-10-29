@@ -2,6 +2,9 @@ package sorting.sorter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,18 +15,27 @@ import java.util.stream.Collectors;
 public abstract class GenericDataSorter<T extends Comparable<T>> implements DataSorter {
 
     private final SortingType sortingType;
+    private final InputStream inputStream;
     private final String naturalOrderStatsTemplate;
     private final String byCountOrderSummaryTemplate;
     private final String byCountOrderEntryTemplate;
 
+    private final PrintWriter printWriter;
+
     protected GenericDataSorter(final SortingType sortingType,
+                                final InputStream inputStream,
+                                final OutputStream outputStream,
                                 final String naturalOrderStatsTemplate,
                                 final String byCountOrderSummaryTemplate,
                                 final String byCountOrderEntryTemplate) {
         this.sortingType = sortingType;
+        this.inputStream = inputStream;
         this.naturalOrderStatsTemplate = naturalOrderStatsTemplate;
         this.byCountOrderSummaryTemplate = byCountOrderSummaryTemplate;
         this.byCountOrderEntryTemplate = byCountOrderEntryTemplate;
+
+        this.printWriter = outputStream == System.out ? null :
+                new PrintWriter(outputStream, true);
     }
 
     @Override
@@ -35,9 +47,9 @@ public abstract class GenericDataSorter<T extends Comparable<T>> implements Data
                     .map(Object::toString)
                     .collect(getNaturalOrderCollector());
 
-            System.out.printf(naturalOrderStatsTemplate, unorderedData.size(), sortedData);
+            printChunk(String.format(naturalOrderStatsTemplate, unorderedData.size(), sortedData));
         } else {
-            System.out.printf(byCountOrderSummaryTemplate, unorderedData.size());
+            printChunk(String.format(byCountOrderSummaryTemplate, unorderedData.size()));
 
             unorderedData.stream()
                     .collect(Collectors.groupingBy(
@@ -50,8 +62,29 @@ public abstract class GenericDataSorter<T extends Comparable<T>> implements Data
                     .sorted(Comparator.comparingLong(Map.Entry::getValue))
                     .forEach(e -> {
                         var percentage = 100 * e.getValue() / unorderedData.size();
-                        System.out.printf(byCountOrderEntryTemplate, e.getKey(), e.getValue(), percentage);
+                        printChunk(String.format(byCountOrderEntryTemplate,
+                                                    e.getKey(), e.getValue(), percentage));
                     });
+        }
+    }
+
+    @Override
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+
+    @Override
+    public void close() {
+        if (printWriter != null) {
+            printWriter.close();
+        }
+    }
+
+    private void printChunk(@NotNull final String chunk) {
+        if (printWriter != null) {
+            printWriter.print(chunk);
+        } else {
+            System.out.print(chunk);
         }
     }
 
@@ -63,4 +96,5 @@ public abstract class GenericDataSorter<T extends Comparable<T>> implements Data
     protected SortingType getSortingType() {
         return sortingType;
     }
+
 }

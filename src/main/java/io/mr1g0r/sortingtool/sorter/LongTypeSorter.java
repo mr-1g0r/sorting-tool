@@ -2,6 +2,8 @@ package sorting.sorter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -14,8 +16,10 @@ public class LongTypeSorter extends GenericDataSorter<Long> {
 
     public static final String VALUE_PARSING_ERROR_TEMPLATE = "\"%s\" is not a long. It will be skipped.%n";
 
-    public LongTypeSorter(final SortingType sortingType) {
-        super(sortingType, NATURAL_ORDER_STATS_TEMPLATE,
+    public LongTypeSorter(final SortingType sortingType,
+                          final InputStream inputStream,
+                          final OutputStream outputStream) {
+        super(sortingType, inputStream, outputStream, NATURAL_ORDER_STATS_TEMPLATE,
                 BYCOUNT_ORDER_SUMMARY_TEMPLATE, BYCOUNT_ORDER_ENTRY_TEMPLATE);
     }
 

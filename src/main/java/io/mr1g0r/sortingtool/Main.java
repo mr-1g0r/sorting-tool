@@ -12,11 +12,12 @@ public class Main {
         Optional<DataSorter> dataSorter = DataSorterFactory.createDataSorter(args);
         dataSorter.ifPresent(sorter -> {
             final var input = new ArrayList<String>();
-            Scanner scanner = new Scanner(System.in);
+            Scanner scanner = new Scanner(sorter.getInputStream());
             while (scanner.hasNextLine()) {
                 input.add(scanner.nextLine());
             }
             sorter.printStats(input);
+            sorter.close();
         });
     }
 }
