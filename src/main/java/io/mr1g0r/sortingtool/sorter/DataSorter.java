@@ -1,4 +1,4 @@
-package sorting.sorter;
+package io.mr1g0r.sortingtool.sorter;
 
 import java.io.InputStream;
 import java.util.List;

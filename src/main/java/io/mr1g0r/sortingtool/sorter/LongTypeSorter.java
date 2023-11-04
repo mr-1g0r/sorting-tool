@@ -1,4 +1,4 @@
-package sorting.sorter;
+package io.mr1g0r.sortingtool.sorter;
 
 import org.jetbrains.annotations.NotNull;
 

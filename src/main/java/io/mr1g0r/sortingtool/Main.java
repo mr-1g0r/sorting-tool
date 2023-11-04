@@ -1,7 +1,7 @@
-package sorting;
+package io.mr1g0r.sortingtool;
 
-import sorting.sorter.DataSorter;
-import sorting.sorter.DataSorterFactory;
+import io.mr1g0r.sortingtool.sorter.DataSorter;
+import io.mr1g0r.sortingtool.sorter.DataSorterFactory;
 
 import java.util.ArrayList;
 import java.util.Optional;

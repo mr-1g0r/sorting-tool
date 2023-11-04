@@ -23,3 +23,8 @@
 hs_err_pid*
 
 .DS_Store
+/.idea/
+/.gradle/
+/build/tmp/jar/MANIFEST.MF
+/build/tmp/compileJava/previous-compilation-data.bin
+/sorting-tool.iml
